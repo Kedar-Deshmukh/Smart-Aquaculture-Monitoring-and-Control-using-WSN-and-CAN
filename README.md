@@ -1,0 +1,2 @@
+# Smart-Aquaculture-Monitoring-and-Control-using-WSN-and-CAN
+Analyzing the water conditions and take proper action in aqua culture plays a vital role for getting better yield.In this project water quality is monitored using ph, DO,Ambient light and temperature sensor interface to an AVR controller along with aerator motor control.The water level in the pond is constantly monitored and the inflow motor is controlled based on the set threshold values. These two modules communicate using RF and CAN respectively, following displaying data on TFT of LPC 1768 board.
