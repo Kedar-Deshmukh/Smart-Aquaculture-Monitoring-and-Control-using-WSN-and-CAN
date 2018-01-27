@@ -1,21 +1,15 @@
+
 /*GSM interfacing with LPC1768*/
 
-/* data type definitions */
 #include "stdint.h"
-
-/* stdlibs */
 #include "stdlib.h"
-
-/* driver includes */
 #include "uart.h"
 #include "misc.h"
-
 /* device includes */
 #include "system_LPC17xx.h"
 #include "LPC17xx.h"
 #include "stdio.h"
 
-/* string */
 #include "string.h"
 
 /* process */
@@ -28,7 +22,6 @@ static void CallModem(void);
 static void CutModem(void);
 static void SMSModemconfig(void);
 static void SMSsend(void);
-
 
 void delayMs(uint8_t timer_num, uint32_t delayInMs);
 
@@ -47,7 +40,6 @@ int main(void)
 	/* Never reach here */
 	return 0;
 }
-
 /* setup hardware */
 void prvSetupHardware(void)
 {
@@ -57,7 +49,6 @@ void prvSetupHardware(void)
 	uart1_init(9600);
 	debug_out("system started\r\n");
 }
-
 /* debug print */
 void debug_out(char * ptr)
 {
@@ -67,7 +58,6 @@ void debug_out(char * ptr)
 		uart1_putc(ptr[i]);
 	}
 }
-
 /* modem print */
 void modem_out(char * ptr)
 {
@@ -77,7 +67,6 @@ void modem_out(char * ptr)
 		uart0_putc(ptr[i]);
 	}
 }
-
 /* modem response line types */
 #define __LINE_BLANK 	0
 #define __LINE_ERROR 	2
@@ -90,45 +79,35 @@ uint8_t process_response(char * ptr, uint16_t len)
 		debug_out("received blank line\r\n");
 		debug_out(ptr);
 		debug_out("\r\n");
-
 		return __LINE_BLANK;
 	}
-
-	// Check for errors
 	if(strstr(ptr,"ERROR") != NULL)
 	{
-		// this is error
+		// error case
 		debug_out("Received from modem error line\r\n");
 		debug_out(ptr);
 		debug_out("\r\n");
-
 		return __LINE_ERROR;
 	}
-
-	// otherwise ?
 	else
 	{
 		// this is ok
 		debug_out("Received from modem other line\r\n");
 		debug_out(ptr);
 		debug_out("\r\n");
-
 		return __LINE_OTHER;
 	}
 }
-
 /* monModem */
 static void monModem(void)
 {
 	uint16_t len, resp;
-
 	debug_out("sending 'AT'\r\n");
 	modem_out("AT\r");
-
 	debug_out("'AT' sent\r\n");
 	debug_out("reading 1st line\r\n");
-	len = uart0_readline();
-	resp = process_response(uart0_fifo.line,len);
+	len=uart0_readline();
+	resp=process_response(uart0_fifo.line,len);
 	debug_out("read 1st line\r\n");
 	debug_out("processing line, expecting a blank\r\n");
 	if(resp == __LINE_BLANK)
@@ -139,20 +118,15 @@ static void monModem(void)
 	{
 		debug_out("error occurred\nExpected __BLANK, but got something else\r\n");
 	}
-
 	debug_out("reading 2nd line\r\n");
-	// read 2nd line
 	len = uart0_readline();
 	debug_out("read 2nd line\r\n");
 	debug_out("processing line, expected is __OTHER line\r\n");
-
 	resp = process_response(uart0_fifo.line,len);
-
 	if(resp == __LINE_OTHER)
 	{
 		debug_out("got __OTHER line\r\n");
 		debug_out("searching for 'OK'\r\n");
-
 		if(strstr(uart0_fifo.line, "OK"))
 		{
 			debug_out("found ok\r\n");
@@ -168,12 +142,10 @@ static void monModem(void)
 		debug_out("'OK' not found\r\n");
 	}
 }
-
-/*SMS modem*/
+/*SMS modem*//*
 static void SMSModemconfig(void)
 {
 	uint16_t len, resp;
-
 	debug_out("sending 'AT+CMGF=1'\r\n");
 	modem_out("AT+CMGF=1\r");
 	debug_out("'AT+CMGF=1;' sent\r\n");
@@ -219,8 +191,9 @@ static void SMSModemconfig(void)
 		debug_out("'OK' not found\r\n");
 	}
 }
-
+*/
 /*SMS sending*/
+/*
 static void SMSsend(void)
 {
 	uint16_t len, resp;
@@ -241,27 +214,23 @@ static void SMSsend(void)
 	{
 		debug_out("error occurred\nExpected __BLANK, but got something else\r\n");
 	}
-
 	debug_out("reading 2nd line\r\n");
-
 	// read 2nd line
 	len = uart0_readline();
 	debug_out("read 2nd line\r\n");
 	debug_out("processing line, expected is __OTHER line\r\n");
-
 	resp = process_response(uart0_fifo.line,len);
 	delayMs(0,5000);
-	modem_out("Hello am Joseph\r\n");
+	modem_out("Hello Siri\r\n");
 	if(resp == __LINE_OTHER)
 	{
 		debug_out("got __OTHER line\r\n");
 		debug_out("searching for 'OK'\r\n");
-
 		if(strstr(uart0_fifo.line, ">"))
 		{
 			debug_out("found >\r\n");
-			/*Type your message*/
-			modem_out("Hello am Joseph\r");
+			/*Type your message*//*
+			modem_out("Hello Siri\r");
 			debug_out("Sending message");
 		}
 		else
@@ -277,14 +246,11 @@ static void SMSsend(void)
 		len = uart0_readline();
 		debug_out("read 3nd line\r\n");
 		debug_out("processing line, expected is __OTHER line\r\n");
-
 		resp = process_response(uart0_fifo.line,len);
-
 		if(resp == __LINE_OTHER)
 		{
 			debug_out("got __OTHER line\r\n");
 			debug_out("searching for 'OK'\r\n");
-
 			if(strstr(uart0_fifo.line, "OK"))
 			{
 				debug_out("found ok\r\n");
@@ -300,7 +266,7 @@ static void SMSsend(void)
 			debug_out("'OK' not found\r\n");
 		}
 }
-
+*/
 static void CallModem(void)
 {
 	uint16_t len, resp;
@@ -321,20 +287,16 @@ static void CallModem(void)
 	{
 		debug_out("error occurred\nExpected __BLANK, but got something else\r\n");
 	}
-
 	debug_out("reading 2nd line\r\n");
 	// read 2nd line
 	len = uart0_readline();
 	debug_out("read 2nd line\r\n");
 	debug_out("processing line, expected is __OTHER line\r\n");
-
 	resp = process_response(uart0_fifo.line,len);
-
 	if(resp == __LINE_OTHER)
 	{
 		//debug_out("got __OTHER line\r\n");
 		debug_out("searching for 'OK'\r\n");
-
 		if(strstr(uart0_fifo.line, "OK"))
 		{
 			debug_out("found ok\r\n");
@@ -350,12 +312,10 @@ static void CallModem(void)
 		debug_out("'OK' not found\r\n");
 	}
 }
-
 /*Cut the call*/
 static void CutModem(void)
 {
 	uint16_t len, resp;
-
 	debug_out("sending 'ATH'\r\n");
 	modem_out("ATH\r");
 	debug_out("'ATH' sent\r\n");
@@ -372,20 +332,16 @@ static void CutModem(void)
 	{
 		debug_out("error occurred\nExpected __BLANK, but got something else\r\n");
 	}
-
 	debug_out("reading 2nd line\r\n");
 	// read 2nd line
 	len = uart0_readline();
 	debug_out("read 2nd line\r\n");
 	debug_out("processing line, expected is __OTHER line\r\n");
-
 	resp = process_response(uart0_fifo.line,len);
-
 	if(resp == __LINE_OTHER)
 	{
 		debug_out("got __OTHER line\r\n");
 		debug_out("searching for 'OK'\r\n");
-
 		if(strstr(uart0_fifo.line, "OK"))
 		{
 			debug_out("found ok\r\n");
@@ -401,7 +357,6 @@ static void CutModem(void)
 		debug_out("'OK' not found\r\n");
 	}
 }
-
 /* Timer0 delay */
 void delayMs(uint8_t timer_num, uint32_t delayInMs)
 {
@@ -413,7 +368,6 @@ void delayMs(uint8_t timer_num, uint32_t delayInMs)
         LPC_TIM0->IR  = 0xff;                /* reset all interrrupts */
         LPC_TIM0->MCR = 0x04;                /* stop timer on match */
         LPC_TIM0->TCR = 0x01;                /* start timer */
-
         /* wait until delay time has elapsed */
         while (LPC_TIM0->TCR & 0x01);
   }
@@ -425,7 +379,6 @@ void delayMs(uint8_t timer_num, uint32_t delayInMs)
         LPC_TIM1->IR  = 0xff;                /* reset all interrrupts */
         LPC_TIM1->MCR = 0x04;                /* stop timer on match */
         LPC_TIM1->TCR = 0x01;                /* start timer */
-
         /* wait until delay time has elapsed */
         while (LPC_TIM1->TCR & 0x01);
   }
