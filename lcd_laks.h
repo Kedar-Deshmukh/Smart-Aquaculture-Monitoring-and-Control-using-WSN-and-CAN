@@ -1,0 +1,18 @@
+void ssp1_init(void);
+void GLCD_init (void);
+static void delay (int cnt);
+static __inline unsigned char ssp_send (unsigned char byte);
+static __inline void wr_cmd (unsigned char c);
+static __inline void wr_dat (unsigned short c);
+static __inline unsigned short rd_dat (void);
+static __inline void wr_reg (unsigned char reg, unsigned short val);
+static unsigned short rd_reg (unsigned char reg);
+void GLCD_putPixel(unsigned int x, unsigned int y);
+void GLCD_setTextColor(unsigned short color);
+void GLCD_setBackColor(unsigned short color);
+void GLCD_clear (unsigned short color);
+void GLCD_drawChar(unsigned int x, unsigned int y, unsigned short *c) ;
+void GLCD_displayChar(unsigned int ln, unsigned int col, unsigned char  c);
+void GLCD_displayStringLn(unsigned int ln, unsigned char *s);
+void GLCD_clearLn(unsigned int ln);
+void GLCD_bitmap (unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned char *bitmap);
