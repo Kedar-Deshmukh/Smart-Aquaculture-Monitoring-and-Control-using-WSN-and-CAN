@@ -1,3 +1,4 @@
+//TFT interfacing using ssp1 to LPC1768
 #include<stdint.h>
 #include<stdlib.h>
 #include<string.h>
