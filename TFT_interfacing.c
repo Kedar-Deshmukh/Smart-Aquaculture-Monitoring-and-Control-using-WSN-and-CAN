@@ -71,29 +71,18 @@ void GLCD_bitmap (unsigned int x, unsigned int y, unsigned int w, unsigned int h
 
 void main()
 {
-	char  arr[]={"  Lakshay Bhardwaj "};
-	//char  arr1[]={" BHARDWAJ  "};
-	ssp1_init();
-	GLCD_init ();
-	GLCD_clear(0x00);
+	char  arr[]={"  Lakshay Bhardwaj "};		//buffer for message
+	char  arr1[]={" BHARDWAJ  "};			// buffer for 2 msg
+	ssp1_init();					//ssp1 init 
+	GLCD_init ();					// lcd init function having lcd command
+	GLCD_clear(0x00);				// clearing the display
 
-	GLCD_displayStringLn(10, arr);
-//	GLCD_displayStringLn(30, arr1);
+	GLCD_displayStringLn(10, arr);			// printing arr data to tft display
+	GLCD_displayStringLn(30, arr1);			// printing second buffer into 2nd line
 
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -101,32 +90,36 @@ void main()
 
 void ssp1_init(void)
 {
-	LPC_SC->PCONP |=(1<<10);		//ENABLING THE SSP1	PERIPHERAL POWER CONTROL
+	LPC_SC->PCONP 				|=(1<<10);		//ENABLING THE SSP1	PERIPHERAL POWER CONTROL
 
-	LPC_SC->PCLKSEL0 |=(1<<21);
-	LPC_SC->PCLKSEL0 &=~(1<<20);	// PERIPHERAL CLOCK SELECT CCLK/2
+	LPC_SC->PCLKSEL0 			|=(1<<21);
+	LPC_SC->PCLKSEL0 			&=~(1<<20);		// PERIPHERAL CLOCK SELECT CCLK/2
 
-	LPC_PINCON->PINSEL0 &=~(1<<12);
-	LPC_PINCON->PINSEL0 &=~(1<<13);
-	LPC_PINCON->PINSEL0 &=~(1<<14);   /// MUX BITS TO SET GPIO PIN TO SSEL1,SCK,MOSI,MISO
-	LPC_PINCON->PINSEL0 &=~(1<<16);
-	LPC_PINCON->PINSEL0 &=~(1<<18);
-	LPC_PINCON->PINSEL0 |=(1<<15)|(1<<17)|(1<<19);	/// MUX BITS TO SET GPIO PIN TO SSEL1,SCK,MOSI,MISO
+	LPC_PINCON->PINSEL0 			&=~(1<<12);
+	LPC_PINCON->PINSEL0 			&=~(1<<13);
+	LPC_PINCON->PINSEL0 			&=~(1<<14);   		/// CLEAR ALL 4 MUX BITS TO SET GPIO PIN TO SSEL1,SCK,MOSI,MISO
+	LPC_PINCON->PINSEL0 			&=~(1<<16);
+	LPC_PINCON->PINSEL0 			&=~(1<<18);
+	LPC_PINCON->PINSEL0 			|=(1<<15)|(1<<17)|(1<<19);	/// SET MUX 15 17 19 BITS TO SET GPIO PIN TO SSEL1,SCK,MOSI,MISO
 
-	// SEING PORT 4.28 TO HIGH FOR BACK LIGHT
-	//CLEAR BIT 0.6 TO SLAVE SELECT
 
-    LPC_GPIO4->FIODIR |=(1<<28);	//PORT 4 PIN NUMBER 28 SETS AS OUTPUT FOR BACK LIGHT
-    LPC_GPIO4->FIOSET |=(1<<28);	// PORT 4 PIN NUMBER 28 SETS AS HIGH FOR BACK LIGHT On
-    LPC_GPIO0->FIODIR |=(1<<6);		// PORT PIN 0.6 IS SET AS OUTPUT
-    LPC_GPIO0->FIOCLR =(1<<6);		// PORT PIN 0.6 IS DRIVE LOW TO SELECT TFT DEVICE
+   	LPC_GPIO4->FIODIR 			|=(1<<28);		//PORT 4 PIN NUMBER 28 SETS AS OUTPUT FOR BACK LIGHT
+    	LPC_GPIO4->FIOSET 			|=(1<<28);		// PORT 4 PIN NUMBER 28 SETS AS HIGH FOR BACK LIGHT On
+    	LPC_GPIO0->FIODIR			|=(1<<6);		// PORT PIN 0.6 IS SET AS OUTPUT
+   	LPC_GPIO0->FIOCLR 			=(1<<6);		// PORT PIN 0.6 IS DRIVE LOW TO SELECT TFT DEVICE
 
     //INITIALIZING SSP1 CONTROL REGISTER
 
-   LPC_SSP1->CR0 |=(1<<0)|(1<<1)|(1<<2)|(1<<7)|(1<<6)|(0<<4);	//8 bit data mode //CONTROL MAINTAIN THE BUS CLOCK HIGH B/W FRAMES // SPI FRAME SELECT
-   LPC_SSP1->CPSR =2;	//CLOCK PRESCALER REGISTER SSP1 ;/* Clock Rate = 18MHz
-   LPC_SSP1->CR1 |=(1<<1); //ENABLING SSP1
+  	LPC_SSP1->CR0 				|=(1<<0)|(1<<1)|(1<<2)|(1<<7)|(1<<6)|(0<<4);	//8 bit data mode //CONTROL MAINTAIN THE BUS CLOCK HIGH B/W FRAMES // SPI FRAME SELECT
+   	LPC_SSP1->CPSR 				 =2;						//CLOCK PRESCALER REGISTER SSP1 ;/* Clock Rate = 18MHz
+   	LPC_SSP1->CR1 				|=(1<<1); 					//ENABLING SSP1
 }
+
+
+
+
+
+
 
 /************************ Local auxiliary functions ***************************/
 
