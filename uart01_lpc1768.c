@@ -23,9 +23,9 @@ void make_a_call();
 int main(void)
 {
 		 SystemInit();
-		 uart0_init(9600);
-		 uart1_init(9600);
-		 make_a_call();
+		 uart0_init(9600);		//uart0 init
+		 uart1_init(9600);		//uart 1 init
+		 make_a_call();			// function call for making call to user
 
 return 0;
 }
